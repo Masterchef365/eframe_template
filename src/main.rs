@@ -1,6 +1,8 @@
 //#![warn(clippy::all, rust_2018_idioms)]
 //#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
+use egui::{ahash::HashMap, layers::PaintList, LayerId};
+
 // When compiling natively:
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> eframe::Result<()> {
@@ -136,6 +138,23 @@ impl eframe::App for TemplateApp {
                 powered_by_egui_and_eframe(ui);
                 egui::warn_if_debug_build(ui);
             });
+        });
+
+        let layer_ids: Vec<_> = ctx.memory(|r| r.layer_ids().collect());
+        ctx.graphics(|r| {
+            let layer_id_to_paintlist: HashMap<LayerId, &PaintList> = layer_ids
+                .iter()
+                .copied()
+                .filter_map(|id| r.get(id).map(|paint| (id, paint)))
+                .collect();
+
+            dbg!(&layer_ids);
+            dbg!(layer_id_to_paintlist.keys().collect::<Vec<_>>());
+
+            eprintln!();
+            eprintln!();
+            eprintln!();
+            eprintln!();
         });
     }
 }
