@@ -106,23 +106,13 @@ impl eframe::App for TemplateApp {
         eframe::set_value(storage, eframe::APP_KEY, &self.save_data);
     }
 
-    /// Called each time the UI needs repainting, which may be many times per second.
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            egui::menu::bar(ui, |ui| {
-                ui.menu_button("File", |ui| {
-                    if ui.button("Quit").clicked() {
-                        ctx.send_viewport_cmd(egui::ViewportCommand::Close);
-                    }
-                });
-
-                egui::widgets::global_theme_preference_buttons(ui);
-            });
+    fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
+        egui::Panel::left("left_panel").show(ui, |ui| {
+            ui.label("Left panel");
         });
 
-        egui::CentralPanel::default().show(ctx, |ui| {
-            ui.label("hi world or whatever");
-            ui.add(DragValue::new(&mut self.save_data.example_value).prefix("Example number: "));
+        egui::CentralPanel::default().show(ui, |ui| {
+            ui.label("Right panel");
         });
     }
 }
